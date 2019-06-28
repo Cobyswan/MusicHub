@@ -32,14 +32,64 @@ class Home extends Component {
         })
     }
 
+    sortByPriceDesc = () => {
+        console.log("PRICE DESC")
+          let priceDesc = this.state.listings.sort((a, b) => (b.price - a.price))
+            this.setState({
+                listings: priceDesc
+            })
+      }
+
+      sortByPriceAsc = () => {
+          console.log("PRICE ASC")
+          let priceAsc = this.state.listings.sort((a, b) => (a.price - b.price))
+            this.setState({
+                listings: priceAsc
+            })
+      }
+
+      sortByDateAsc = () => {
+          console.log("DATE ASCx1")
+          let dateAsc = this.state.listings.sort((a, b) => (a.listing_id - b.listing_id))
+          console.log("DATE ASC 2", dateAsc)
+            this.setState({
+                listings: dateAsc
+            })
+      }
+
+      sortByDateDesc = () => {
+          console.log("DATE DESC")
+          let dateDesc = this.state.listings.sort((a, b) => (b.listing_id - a.listing_id))
+            this.setState({
+                listings: dateDesc
+            })
+      }
+
+
+      fireSortFunctions = (e) => {
+        console.log(e.target.value)
+        if(e.target.value === "PLH"){
+            this.sortByPriceAsc()
+        }
+        else if(e.target.value === "PHL"){
+            this.sortByPriceDesc()
+        }
+       else if(e.target.value === "DLH"){
+            this.sortByDateAsc()
+        }
+       else if(e.target.value ==="DHL"){
+            this.sortByDateDesc()
+        }
+      }
 
     render(){
+        console.log("LISTINGS", this.state.listings)
         const { listing_id } = this.state
         // const filteredListings = listings.filter(listing => {
         //     return listing.listing_name.toLowerCase().includes(this.state.filterText)
         // })
 
-        const filteredListings = this.state.listings.filter(listing => {
+        let filteredListings = this.state.listings.filter(listing => {
             return listing.listing_name.toLowerCase().includes(this.state.filterText)
         })
 
@@ -57,8 +107,8 @@ class Home extends Component {
         return (
             <div className='home'>
                 <div className='home__filter'>
-                    <input onChange={(e) => this.filterTextHandler(e.target.value)}></input>
-                    <SortDropdown listings={this.props.data}/>
+                    <input placeHolder="Filter by name" onChange={(e) => this.filterTextHandler(e.target.value)}></input>
+                    <SortDropdown fireSortFunctions={this.fireSortFunctions} />
                 </div>
                     <div className='home__cardContainer'>
                         {mappedListings}

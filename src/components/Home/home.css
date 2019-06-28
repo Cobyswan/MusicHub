@@ -1,25 +1,26 @@
 .home {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-height: 80vh;
+    
 }
-
 .home__filter {
     display: flex;
-    margin-top: 10px;
-    width: 116vh;
-    justify-content: space-between
+    justify-content: space-around;
+    padding-top: 50px;
 }
-
 .home__cardContainer {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    width: 125vh;
-    margin-top: 10px;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    min-height: 90vh;
 }
-
 .home__card {
     color: black;
+}
+a:hover{
+    color: gray
 }

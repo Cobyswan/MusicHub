@@ -1,16 +1,36 @@
 .footer {
-    height: 100px;
+    height: 80px;
     display: flex;
-    background-color: black;
+    background-color: #37485C;
     color: white;
-    padding-top: 44px;
+    padding-top: 32px;
     justify-content: space-around;
+    font-family: 'arial'
 }
 
-h3 {
+.footer__title {
     margin-left: 36.1%;
+    color: white;
 }
 
-.footer__linksLeft, .footer__linksRight {
+.footer__links {
     display: flex;
+}
+
+.footer__links a {
+    padding: 0 10px;
+    color: white;
+}
+
+@media only screen and (max-width: 768px) {
+    .footer__links {
+        display: flex;
+    }
+    .footer__title {
+        display: none;
+        padding: 100px;
+    }
+    .footer__links a {
+        padding: 0 30px;
+    }
 }

@@ -1,3 +1,95 @@
 .user {
-    min-height: 80vh;
+    display: inline;
 }
+
+.user__report {
+    margin: 50px 2% 0 0;
+    border-radius: 3px;
+    float: right;
+    border: 2px solid #37485C;
+    background-color: #FAFAFA;
+}
+
+.user__person {
+    display: flex;
+    min-height: 85vh;
+    justify-content: space-around;
+    margin: 0 auto;
+    /* padding-top: 100px; */
+}
+
+.user__image {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.user__noImage {
+    padding: 20px 0 5px 0;
+}
+
+.user__userInfo {
+    background-color: #37485C;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.user__cardContainer {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* padding: 4vh 0 2vh 0; */
+    margin: 50px 0;
+    width: 60vw;
+    min-height: 90vh;
+}
+
+.user__card {
+    color: black;
+}
+
+.user__location {
+    margin-top: 20px;
+}
+.deleteBtn, .editBtn {
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+}
+
+@media only screen and (max-width: 873px) {
+    .user__report {
+        display: none;
+    }
+    .user__person {
+        flex-direction: column;
+    }
+    .user__userInfo {
+        background-color: #37485C;
+        margin-top: 136px;
+        padding: 10px;
+        border-radius: 5px;
+        color: white;
+        width: 80%;
+    }
+    .user__image {
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+    }
+    .user__cardContainer {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        border: 3px solid black;
+        margin: 0 auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        width: 80%;
+    }
+} 

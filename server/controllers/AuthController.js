@@ -53,10 +53,14 @@ module.exports = {
     },
     
     getUserData(req, res){
+        console.log(req)
         res.status(200).json(req.session.user)
     },
     logout: (req, res) => {
         req.session.destroy();
         res.status(200).send(null)
+    },
+    sessionInfo: (req,res) => {
+        res.status(200).json(req.session.user)
     }
 }

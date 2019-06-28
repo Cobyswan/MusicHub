@@ -1,152 +1,205 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { connect } from 'react-redux'; 
-import './productView.css'
-import { update_listing_id } from '../../redux/reducer'
+import React, { Component } from "react";
+import axios from "axios";
+import SimilarListings from './SimilarListings';
+import Card from "../Card/Card";
+import { connect } from "react-redux";
+import io from "socket.io-client";
+import "./productView.css";
+import { update_listing_id } from "../../redux/reducer";
+// import CarouselContainer from "./CarouselContainer";
+import SlickContainer from './SlickContainer'
+import { Link } from "react-router-dom";
+import Map from "../Map/Map";
+
 
 class ProductView extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            listing_id: [{
-                description: "", 
-                email: "", 
-                listing_id: "",
-                listing_name: "",
-                price: "",
-                profile_name: "",
-                sold: false,
-                tags: "",
-                time_stamp: "",
-                type: "",
-                user_id: ""
-             }]
+  constructor(props) {
+    super(props);
+    this.state = {
+      listing_id: [
+        {
+          description: "",
+          email: "",
+          listing_id: "",
+          listing_name: "",
+          price: "",
+          profile_name: "",
+          sold: false,
+          tags: "",
+          time_stamp: "",
+          type: "",
+          user_id: "",
+          images: [],
+          zipcode: null
         }
-    }
+      ],
+      similar_listings: []
+    };
+    this.socket = io("localhost:4010");
+  }
 
-    // Need SQL file to get listing by ID# 
-    // Deconstruct everything we need from the listing and place them in the appropriate divs 
-     
-    componentDidMount(){
-        console.log("PROPS", this.props)
-        this.fetchListingID()
-    }
+  // Need SQL file to get listing by ID#
+  // Deconstruct everything we need from the listing and place them in the appropriate divs
 
-    fetchListingID = () => {
-        axios.get(`/api/listings/${this.props.match.params.listing_id}`).then(response => {
-            this.setState({
-                listing_id: response.data
-            })
-        }) 
-    }
+  componentDidMount() {
+    this.fetchListingID();
+  }
 
-    render(){
-        console.log(this.state.listing_id[0])
-        
-        return(
+  fetchListingID = () => {
+    axios
+      .get(`/api/listings/${this.props.match.params.listing_id}`)
+      .then(response => {
+        this.setState({
+          listing_id: response.data
+        });
+      })
+      .then(() => {
+        this.getSimilarListings();
+      });
+  };
 
-            <div className="productView">
+  getSimilarListings = () => {
+    console.log("getSimilarListings START", this.state.listing_id[0].type);
+    axios
+      .get(`/api/get_similar_listings/${this.state.listing_id[0].type}`)
+      .then(response => {
+        console.log("RESPONSE CALLBACK", response);
+        this.setState({
+          similar_listings: response.data
+        });
+      });
+  };
 
-                <div className="productView__images">
-                    {/* {this.state} */}
-                    <img
-            src="https://i.ytimg.com/vi/R1b5FlhMc8s/maxresdefault.jpg"
-            className="card__image"
-            alt="kitten looking menacing."
+  connectUsers = () => {
+    this.socket.emit("CONNECT_USERS", {
+      user1_id: this.props.user.user_id,
+      user1_profileName: this.props.user.profile_name,
+      user2_id: this.state.listing_id[0].user_id,
+      user2_profileName: this.state.listing_id[0].profile_name,
+      listing_name: this.state.listing_id[0].listing_name,
+      listing_id: this.props.match.params.listing_id
+    });
+  };
+
+  render() {
+    console.log(this.props.user);
+    const { type } = this.state.listing_id[0].type;
+    console.log(
+      "STATE",
+      this.state.listing_id,
+      "IMAGES",
+      this.state.listing_id[0].images,
+      "SIMILAR PRODUCTS",
+      this.state.listing_id[0].type,
+      "TYPE",
+      type
+    );
+    return (
+      <div className="productView">
+        {/* <div className="productView__listingName">
+                <h2 className="ui header">
+                  {this.state.listing_id[0].listing_name}
+                </h2>
+              </div> */}
+
+        <div className="productView__images">
+          {/* <CarouselContainer images={[this.state.listing_id[0].images]} id={[this.state.listing_id[0].listing_id]} /> */}
+          <SlickContainer
+            images={this.state.listing_id[0].images}
+            id={this.state.listing_id[0].listing_name}
           />
+        </div>
 
-                </div>
+        <div className="productView__descriptionAndUserInfo">
+          <div className="productView__productInfo">
+            <div className="productView__nameAndPrice">
+              <div className="productView__listingName">
+                <h2 className="ui header">
+                  {this.state.listing_id[0].listing_name}
+                </h2>
+              </div>
 
-                <div className="productView__descriptionAndUserInfo">
+              <div className="productView__listingPrice">
+                <h2 className="ui header">
+                  $
+                  {this.state.listing_id[0].price
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                </h2>
+              </div>
+            </div>
 
-                    <div className="productView__productInfo">
+            <div className="productView__location">
+              <div className="productView__zipcode">
+                <h2>{/*this.state.listing_id[0].zipcode*/}Phoenix, AZ</h2>
+              </div>
+            </div>
 
-                        <div className="productView__nameAndPrice">
+            <hr className="productView__lineBreakListingInfo" />
+            <div className="productView__description">
+              <h3 className="ProductView__description_description">
+                Description
+              </h3>
+              <div className="productView__descriptionText">
+                {this.state.listing_id[0].description}
+              </div>
+            </div>
+          </div>
 
-                            <div className="productView__listingName">
-                                NAME {this.state.listing_id[0].listing_name}
-                            </div>
+          <div className="productView__userInfo">
+            <img
+              className="productView__profilePicture"
+              style={{
+                height: "80px",
+                width: "80px",
+                marginBottom: "5px",
+                alignSelf: "center"
+              }}
+              src={this.state.listing_id[0].picture}
+            />
 
-                            <div className="productView__listingPrice">
-                                PRICE ${this.state.listing_id[0].price}
-                            </div>
+            <div className="productView__profileName">
+              <h3 className="ui header">
+                {
+                  this.state.listing_id[0].profile_name
+                    .split(" ")[0]
+                    .split("@")[0]
+                }
+              </h3>
+            </div>
 
-                        </div>
+            {/* <div className="productView__userRating">USER RATING</div> */}
 
-                        <div className="productView__location">
-                            LOCATION
-                            {this.state.listing_id[0].location}
-                        </div>
-                        
-                        <div className="productView__productBreakLine">
-                            <hr/>
-                        </div>
+            <hr className="productView__lineBreakUserInfo" />
 
-                        <div className="productView__description">
+            <Link onClick={this.connectUsers} to={`/messages`}>
+              <button className="productView__messageButton">Message</button>
+            </Link>
 
-                            <div className="productView__textDescription">
-                                DESCRIPTION
-                            </div>
+            {/* <button className="productView__saveButton">Save</button> */}
+          </div>
+        </div>
 
-                            <div>
-                                {this.state.listing_id[0].description}
-                            </div>
+        <div className="productView__googleMaps">
+          <Map zipcode={this.state.listing_id[0].zipcode} />
+        </div>
 
-                        </div>
-                        
-                    </div>
-
-                    <div className="productView__userInfo">
-
-                        <div className="productView__profilePicture">
-                            PROFILE PICTURE
-                        </div>
-
-                        <div className="productView__profileName">
-                            PROFILE NAME {this.state.listing_id[0].profile_name}
-                        </div>
-
-                        <div className="productView__userRating">
-                            USER RATING
-                        </div>
-
-                        <div className="productView__userBreakLine">
-                            <hr/>
-                        </div> 
-
-                        <button className="productView__messageButton">
-                            Message
-                        </button>
-
-                        <button className="productView__saveButton">
-                            Save
-                        </button>
-
-                    </div>
-                
-                </div>
-
-                <div className="productView__googleMaps">
-
-                    GOOGLE MAPS
-
-                </div>
-
-                <div className="productView__similarOfferings">
-
-                    SIMILAR OFFERINGS
-
-                </div>
-                
-            </div> 
-        )
-    }
+        <div className="productView__similarListings">
+          {/* <SimilarListings similar={this.state.similar_listings}/> */}
+        </div>
+      </div>
+    );
+  }
 }
 
-const mapStateToProps = (reducerState) => {
-    return {
-        listing_id: reducerState.listing_id
-    }
-}
+const mapStateToProps = reducerState => {
+  return {
+    listing_id: reducerState.listing_id,
+    user: reducerState.user
+  };
+};
 
-export default connect (mapStateToProps, { update_listing_id })(ProductView);
+export default connect(
+  mapStateToProps,
+  { update_listing_id }
+)(ProductView);

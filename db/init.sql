@@ -4,7 +4,7 @@ create table users (
     auth0_id integer,
     profile_name text,
     email text, 
-    picure text
+    picture text
 );
 
 create table listings (
@@ -45,6 +45,21 @@ create table pictures(
     picture_id serial primary key,
     listing_id int references listings(listing_id),
     picture_url text
+);
+
+create table rooms(
+    room_id serial
+    user_1 integer,
+    user_2 integer,
+    room_name varchar(64) primary key
+);
+
+create table room_data(
+time_sent TIMESTAMPTZ NOT NULL DEFAULT NOW()
+,sender integer
+,recipient integer
+,message text
+,room_name varchar(64) references rooms(room_name)
 );
 
 

@@ -7,14 +7,13 @@ export default class Footer extends Component {
     render(){
         
         return (
-            <div class="footer">
-                <h3>MusicHub 2019</h3>
-                <div class="footer__linksRight">
+            <div className="footer">
+            <Link className="footer__title" to="/" >
+                <h3>MusicHub</h3>
+            </Link>
+                <div className="footer__links">
                     <Link to="/sell">
                         <h2>Sell</h2>
-                    </Link>
-                    <Link to="/messages">
-                        <h2>Messages</h2>
                     </Link>
                     <Link to="/user">
                         <h2>User</h2>
@@ -24,3 +23,4 @@ export default class Footer extends Component {
         )
     }
 }
+
